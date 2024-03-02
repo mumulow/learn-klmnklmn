@@ -1,26 +1,26 @@
 def check_if_head_gets_in_window(a, b, d):
-  return a - d >= 2 and b - d >= 2
+    return a - d >= 2 and b - d >= 2
+
 
 assert check_if_head_gets_in_window(10, 20, 8) == True
 assert check_if_head_gets_in_window(1, 4, 10) == False
 print("OK")
 
+
 def amount_and_sum_of_digits(num):
-  digits_count = 0
-  digits_sum = 0
-  while num > 0:
-    digits_sum += num % 10
-    digits_count += 1
-    num = num // 10
-  return digits_count, digits_sum
+    digits_count = 0
+    digits_sum = 0
+    while num > 0:
+        digits_sum += num % 10
+        digits_count += 1
+        num = num // 10
+    return digits_count, digits_sum
 
 
 assert amount_and_sum_of_digits(1) == (1, 1)
 assert amount_and_sum_of_digits(1234) == (4, 10)
 assert amount_and_sum_of_digits(77777) == (5, 35)
 print("OK")
-
-
 
 
 def ski_up(s: float, p: float) -> tuple[list[float], float]:
@@ -49,9 +49,8 @@ print("OK")
 
 GLASN = frozenset(["а", "е", "ё", "и", "о", "у", "ы", "э", "ю", "я"])
 SOGLASN = frozenset(
-    ["б", "в", "г", "д", "ж", "з", "й", "к", "л", "м", "н", "п", "р", "с", "т", "ф", "х", "ц", "ч", "ш", "щ"])
-
-
+    ["б", "в", "г", "д", "ж", "з", "й", "к", "л", "м", "н", "п", "р", "с", "т", "ф", "х", "ц", "ч", "ш", "щ"]
+)
 
 
 def find_glasn_soglasn(sentence: str) -> tuple[int, int]:
@@ -95,15 +94,15 @@ print("OK")
 
 from enum import Enum
 
+
 class Status(str, Enum):
-  NEW = "новая"
-  ACCEPTED = "принята"
+    NEW = "новая"
+    ACCEPTED = "принята"
+
 
 class OrderType(str, Enum):
-  COMMON = "обыкновенная"
-  LOCATED = "с указанием локации"
+    COMMON = "обыкновенная"
+    LOCATED = "с указанием локации"
 
 
 order["status"] = Status.NEW
-
-

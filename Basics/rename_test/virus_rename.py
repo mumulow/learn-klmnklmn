@@ -12,7 +12,7 @@ def generate_new_name(file: Path):
 
 def rename_all_files_in_dir(
     dir_path: Path = CURRENT_DIR,
-    protected_files: Iterable[Path] = (CURRENT_FILE, ),
+    protected_files: Iterable[Path] = (CURRENT_FILE,),
 ):
     for maybe_file in dir_path.iterdir():
         if maybe_file in protected_files:
